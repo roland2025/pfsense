@@ -885,6 +885,7 @@ function openvpn_get_active_servers($type="multipoint") {
 			$server = array();
 			$server['port'] = ($settings['local_port']) ? $settings['local_port'] : 1194;
 			$server['mode'] = $settings['mode'];
+			$server['caref'] = $settings['caref'];
 			if ($settings['description'])
 				$server['name'] = "{$settings['description']} {$prot}:{$port}";
 			else

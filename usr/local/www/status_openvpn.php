@@ -187,6 +187,7 @@ include("head.inc"); ?>
 			</tr>
 
 			<?php endforeach; ?>
+
 			<tfoot>
 			<tr>
 				<td colspan="6" class="list" height="12"></td>
@@ -197,6 +198,78 @@ include("head.inc"); ?>
 		</td>
 	</tr>
 </table>
+
+			<!-- INACTIVE CLIENTS -->
+
+<?php 
+
+$a_cert =& $config['cert'];
+
+?>
+
+<table style="padding-top:0px; padding-bottom:0px; padding-left:0px; padding-right:0px" width="100%" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+		<td colspan="6" class="listtopic">
+			<?=$server['name'];?> <?=gettext("Inactive clients"); ?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<table style="padding-top:0px; padding-bottom:0px; padding-left:0px; padding-right:0px" class="tabcont sortable" width="100%" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td class="listhdrr"><?=gettext("Common Name"); ?></td>
+			</tr>
+
+<?php
+
+	foreach($a_cert as $cert):
+
+	if($cert['caref']==$server['caref']) {
+
+		if ($cert['crt']) {
+			$purpose = cert_get_purpose($cert['crt']);
+		}
+
+
+		if (is_array($purpose)):
+			$server_purpose=$purpose['server'];
+		endif;
+
+		if($server_purpose=="No"){
+			$common_name=cert_get_cn($cert['crt']);
+
+			$connected=false;
+			foreach ($server['conns'] as $conn):
+				if($conn['common_name']==$common_name){
+					$connected=true;
+				}
+			endforeach;
+
+			if(!$connected){
+
+?>
+			<tr name='test'>
+				<td class="listlr">
+					<?=htmlspecialchars($common_name);?>
+				</td>
+			</tr>
+			<?php
+}
+}
+}
+endforeach ?>
+
+			<tfoot>
+			<tr>
+				<td colspan="6" class="list" height="12"></td>
+			</tr>
+			</tfoot>
+
+		</table>
+		</td>
+	</tr>
+</table>
+<!-- DISABLED CLIENTS END -->
 
 <?php endforeach; ?>
 <br>
